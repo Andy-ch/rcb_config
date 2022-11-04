@@ -1,13 +1,13 @@
 TS           := $(shell /bin/date "+%Y%m%d-%H%M%S")
-RCB_USER     := <USER_FOR_YOUR_VM>
-RCB_HOST     := <IP_OF_YOUR_VM>
-SSH_KEY_PATH := <PATH_TO_YOUR_SSH_KEY>
+RCB_USER     := ubuntu
+RCB_HOST     := 13.48.124.39
+SSH_KEY_PATH := ~/.ssh/RCB.pem
 
-BOT_VERSION       := <RCB_VERSION>
+BOT_VERSION       := rc/0.109.0
 BOT_IMAGE_VERSION := $(subst /,-,$(BOT_VERSION))
 
 BOT_HOME    := ~/bot
-BOT_IMG_URL := "https://wallpaperaccess.com/full/6105879.jpg"
+BOT_IMG_URL := "https://files.slack.com/files-pri/T1H4XT8DV-F02FKRZ2QK0/1000x1000_color.png?pub_secret=43aa14cb10"
 
 ##@ General
 help: ## Display this help.
@@ -17,7 +17,7 @@ help: ## Display this help.
 upload: ## Upload files into VM w/o launch
 	ssh -i $(SSH_KEY_PATH) $(RCB_USER)@$(RCB_HOST) 'mkdir -p $(BOT_HOME)/sql/ $(BOT_HOME)/resources/ $(BOT_HOME)/mysql_data/ $(BOT_HOME)/logs/'
 	scp -i $(SSH_KEY_PATH) config.yml $(RCB_USER)@$(RCB_HOST):$(BOT_HOME)/resources/config.yml
-	git clone --depth 1 --branch $(BOT_VERSION) git@github.com:kvendingoldo/random_coffee_slack.git /tmp/rcb
+	git clone --depth 1 --branch $(BOT_VERSION) https://github.com/kvendingoldo/random_coffee_slack.git /tmp/rcb
 	rsync -av -e 'ssh -i $(SSH_KEY_PATH)' /tmp/rcb/admin-tools $(RCB_USER)@$(RCB_HOST):$(BOT_HOME)/
 	scp -i $(SSH_KEY_PATH) /tmp/rcb/docker-compose.yml $(RCB_USER)@$(RCB_HOST):$(BOT_HOME)/docker-compose.yml
 	rm -rf /tmp/rcb
